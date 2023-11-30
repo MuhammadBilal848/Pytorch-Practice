@@ -1,61 +1,61 @@
-# import numpy as np
+import numpy as np
 
-# ##########################################################################################################
-# #                      here we will implement linear regression manually from scratch 
-# ##########################################################################################################
-
-
-# # eqn of linear reg , we are ignoring bias here
-# # f = w * x
-
-# x = np.array([1,2,3,4,5],dtype = np.float32) # input
-# y = np.array([3,5,11,7,9],dtype = np.float32) # output
+##########################################################################################################
+#                      here we will implement linear regression manually from scratch 
+##########################################################################################################
 
 
-# # here we define the initial weight
-# w = 0.0
+# eqn of linear reg , we are ignoring bias here
+# f = w * x
 
-# # define model
-# def forward(x):
-#     return w * x
-
-# # loss
-# # MSE - (1(w*x - y)**2)/N
-# def loss(y,y_pred):
-#     return ((y_pred-y)**2).mean()
-
-# # gradient
-# # dJ/dw = 1(2x (w*x -y))/ N
-# def gradient(x,y,y_pred):
-#     return np.dot(2*x,y_pred-y).mean()
+x = np.array([1,2,3,4,5],dtype = np.float32) # input
+y = np.array([3,5,11,7,9],dtype = np.float32) # output
 
 
-# print(f'Prediction before training: f(5) = {forward(5):.3f}')   
+# here we define the initial weight
+w = 0.0
 
-# # training
-# lr = 0.01
-# n_iters = 10
+# define model
+def forward(x):
+    return w * x
 
-# for epoch in range(n_iters):
+# loss
+# MSE - (1(w*x - y)**2)/N
+def loss(y,y_pred):
+    return ((y_pred-y)**2).mean()
 
-#     # predictions
-#     ypred = forward(x)
-
-#     # loss
-#     l = loss(y,ypred)
-
-#     # gradients
-#     dw = gradient(x,y,ypred) # dw/dl
-
-#     # updating weights
-#     w -= lr * dw
-
-#     if epoch % 1 == 0:
-#         print(f'epoch {epoch+1}: w = {w:.3f} , loss = {l:.8f}')
+# gradient
+# dJ/dw = 1(2x (w*x -y))/ N
+def gradient(x,y,y_pred):
+    return np.dot(2*x,y_pred-y).mean()
 
 
-# print(f'Prediction after training: f(5) = {forward(2):.3f}')   
-# print(f'Prediction after training: f(5) = {forward(6):.3f}')   
+print(f'Prediction before training: f(5) = {forward(5):.3f}')   
+
+# training
+lr = 0.01
+n_iters = 10
+
+for epoch in range(n_iters):
+
+    # predictions
+    ypred = forward(x)
+
+    # loss
+    l = loss(y,ypred)
+
+    # gradients
+    dw = gradient(x,y,ypred) # dw/dl
+
+    # updating weights
+    w -= lr * dw
+
+    if epoch % 1 == 0:
+        print(f'epoch {epoch+1}: w = {w:.3f} , loss = {l:.8f}')
+
+
+print(f'Prediction after training: f(5) = {forward(2):.3f}')   
+print(f'Prediction after training: f(5) = {forward(6):.3f}')   
 
 
 ##########################################################################################################
