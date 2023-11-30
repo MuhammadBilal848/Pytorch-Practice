@@ -34,7 +34,7 @@ loss = nn.MSELoss()
 # we also have to define optimizer
 # here is the optimizer documentation : https://pytorch.org/docs/stable/optim.html
 # we now have model's own parameter i.e. w and b , so we can use them
-optimizer = torch.optim.SGD(model.parameters() , lr=lr)
+optimizer = torch.optim.SGD(model.parameters() , lr=lr) # weight initialization is now random
 
 print(f'Prediction before training: f(5) = {model(xtest).item():.3f}')   
 
@@ -45,8 +45,9 @@ for epoch in range(n_iters):
     # predictions
     ypred = model(x)
 
-    # loss
-    l = loss(y,ypred)
+    # loss (both are usefull)
+    l = loss(ypred,y)
+    # l = loss(y,ypred)
 
     # gradients
     l.backward()
@@ -66,6 +67,62 @@ for epoch in range(n_iters):
 print(f'Expectation {2+3} vs Prediction after training: f(2) = {model(xtest).item():.3f}')   
 print(f'Expectation {6+7} vs Prediction after training: f(6) = {model(torch.tensor([6.0],dtype=torch.float32)).item():.3f}')   
 print(f'Expectation {9+10} vs Prediction after training: f(9) = {model(torch.tensor([9.0],dtype=torch.float32)).item():.3f}')   
+
+
+
+############################################################################################################
+#                                               Using Custom Class
+############################################################################################################
+
+
+x = torch.tensor([[1],[2],[3],[4],[5]],dtype = torch.float32) # input
+y = torch.tensor([[3],[5],[11],[7],[9]],dtype = torch.float32) # output
+
+xtest = torch.tensor([2.0],dtype=torch.float32)
+
+lr = 0.01
+n_iters = 100
+
+# instead of using built in pytorch layer we can make our own class using builtin layer
+class LinearRegression(nn.Module):
+    def __init__(self,input_param , output_param):
+        super(LinearRegression,self).__init__()
+        # we can also use 'super().__init__()'
+        self.linear = nn.Linear(input_param , output_param)
+
+    def forward(self,x):
+        return self.linear(x)
+    
+model = LinearRegression(1,1)
+
+loss = nn.MSELoss()
+
+optimizer = torch.optim.SGD(model.parameters() , lr=lr) # weight initialization is now random
+
+print(f'Prediction before training: f(5) = {model(xtest).item():.3f}')   
+
+for epoch in range(n_iters):
+
+    ypred = model(x)
+
+    l = loss(ypred,y)
+
+    l.backward()
+
+    optimizer.step()
+
+    optimizer.zero_grad()
+
+    if epoch % 1 == 0:
+        w,b = model.parameters()
+        print(f'epoch {epoch+1}: w = {w.item():.3f} : b = {b.item():.3f}, loss = {l:.8f}')
+
+
+
+print(f'Expectation {2+3} vs Prediction after training: f(2) = {model(xtest).item():.3f}')   
+print(f'Expectation {6+7} vs Prediction after training: f(6) = {model(torch.tensor([6.0],dtype=torch.float32)).item():.3f}')   
+print(f'Expectation {9+10} vs Prediction after training: f(9) = {model(torch.tensor([9.0],dtype=torch.float32)).item():.3f}')   
+
 
 
 
